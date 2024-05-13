@@ -28,6 +28,11 @@ game_start = False
 fight_start = False
 p1_chosen = False
 
+p1_c1 = False
+p1_c2 = False
+p2_c1 = False
+p2_c2 = False
+
 # render the text for later
 display_welcome_message = my_font1.render(welcome_message, True, (255, 255, 255))
 display_instructions_message = my_font1.render(instructions_message, True, (255, 255, 255))
@@ -65,38 +70,39 @@ while run:
         if event.type == pygame.QUIT:  # If user clicked close
             run = False
 
-
         if event.type == pygame.MOUSEBUTTONUP and game_start and p1_chosen:
             fight_start = True
 
-        if event.type == pygame.MOUSEBUTTONUP and p1_chosen is False:
-            pos = pygame.mouse.get_pos()
-            if c1.rect.collidepoint(pos):
-                print("c1 clicked")
-                p1_character = CharacterOne(300, 600)
-                p1_chosen = True
-            elif c2.rect.collidepoint(pos):
-                print("c2 clicked")
-                p1_character = C2(300, 600)
-                p1_chosen = True
-            print(p1_character)
+        if event.type == pygame.MOUSEBUTTONUP and fight_start is False:
+            if p1_chosen is False:
+                pos = pygame.mouse.get_pos()
+                if c1.rect.collidepoint(pos):
+                    p1_c1 = True
+                    p1_chosen = True
+                elif c2.rect.collidepoint(pos):
+                    p1_c2 = True
+                    p1_chosen = True
 
-        if event.type == pygame.MOUSEBUTTONUP and p1_chosen:
-            pos = pygame.mouse.get_pos()
-            if c1.rect.collidepoint(pos):
-                print("c1 clicked")
-                p2_character = CharacterOne(300, 600)
-                fight_start = True
-            elif c2.rect.collidepoint(pos):
-                print("c2 clicked")
-                p2_character = C2(300, 600)
-                fight_start = True
-            print(p1_character)
+                if p1_c1:
+                    p1_character = CharacterOne(300, 600)
+                elif p1_c2:
+                    p1_character = C2(300, 600)
+            else:
+                pos = pygame.mouse.get_pos()
+                if c1.rect.collidepoint(pos):
+                    p2_c1 = True
+                    fight_start = True
+                elif c2.rect.collidepoint(pos):
+                    p2_c2 = True
+                    fight_start = True
 
+                if p2_c1:
+                    p2_character = CharacterOne(700, 600)
+                elif p2_c2:
+                    p2_character = C2(700, 600)
 
         if event.type == pygame.MOUSEBUTTONUP:
             game_start = True
-
 
 
     # blitting
@@ -115,8 +121,10 @@ while run:
                 screen.blit(display_character_instructions2, (300, 200))
         if fight_start:
             screen.blit(bg, (0, 0))
-            screen.blit(p1_character.image, (c1.x, c1.y))
-            screen.blit(p1_character.image, (c2.x, c2.y))
+            if p1_c1:
+                screen.blit(p1_character.image, (p1_character.x, p1_character.y))
+            if p2_c1:
+                screen.blit(p2_character.image, (p2_character.x, p2_character.y))
     pygame.display.update()
 
 # Once we have exited the main program loop we can stop the game engine:
