@@ -1,6 +1,6 @@
 import pygame
 from characterone import CharacterOne
-from charactertwo import C2
+from charactertwo import CharacterTwo
 
 # set up pygame modules
 pygame.init()
@@ -19,11 +19,11 @@ instructions_message = "Use WASD to move. Ability keys are E and Q"
 character_instructions1 = "Choose a character for player 1"
 character_instructions2 = "Choose a character for player 2"
 
-c1 = CharacterOne(200, 600)
-c2 = C2(300, 600)
+c1 = CharacterOne(300, 600)
+c2 = CharacterTwo(300, 600)
 
-p1_character = "x"
-p2_character = "y"
+
+
 game_start = False
 fight_start = False
 p1_chosen = False
@@ -83,23 +83,17 @@ while run:
                     p1_c2 = True
                     p1_chosen = True
 
-                if p1_c1:
-                    p1_character = CharacterOne(300, 600)
-                elif p1_c2:
-                    p1_character = C2(300, 600)
-            else:
+            if p1_chosen:
                 pos = pygame.mouse.get_pos()
                 if c1.rect.collidepoint(pos):
                     p2_c1 = True
+                    print(p2_c1)
                     fight_start = True
-                elif c2.rect.collidepoint(pos):
+                if c2.rect.collidepoint(pos):
                     p2_c2 = True
+                    print(p2_c2)
                     fight_start = True
 
-                if p2_c1:
-                    p2_character = CharacterOne(700, 600)
-                elif p2_c2:
-                    p2_character = C2(700, 600)
 
         if event.type == pygame.MOUSEBUTTONUP:
             game_start = True
@@ -119,12 +113,20 @@ while run:
                 screen.blit(display_character_instructions1, (300, 200))
             else:
                 screen.blit(display_character_instructions2, (300, 200))
-        if fight_start:
+        else:
             screen.blit(bg, (0, 0))
             if p1_c1:
-                screen.blit(p1_character.image, (p1_character.x, p1_character.y))
+                c1 = CharacterOne(300, 600)
+                screen.blit(c1.image, (c1.x, c1.y))
+            if p1_c2:
+                c2 = CharacterTwo(300, 600)
+                screen.blit(c1.image, (c1.x, c1.y))
             if p2_c1:
-                screen.blit(p2_character.image, (p2_character.x, p2_character.y))
+                c1 = CharacterOne(700, 600)
+                screen.blit(c1.image, (c1.x, c1.y))
+            if p2_c2:
+                c2 = CharacterTwo(700, 600)
+                screen.blit(c2.image, (c2.x, c2.y))
     pygame.display.update()
 
 # Once we have exited the main program loop we can stop the game engine:
