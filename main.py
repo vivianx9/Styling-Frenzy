@@ -55,68 +55,41 @@ while run:
     # movement
     keys = pygame.key.get_pressed()  # checking pressed keys
 
-    if kirby.x >= 100 and kirby.x <= 800 and mario.x >= 100 and mario.x <= 800:
-        # movement for player one
-        if p1_c1:
-            if keys[pygame.K_d]:
-                kirby.move_direction("right")
-            if keys[pygame.K_a]:
-                kirby.move_direction("left")
+    if fight_start:
+        # if p1.x >= 100 and p1.x <= 800 and p2.x >= 100 and p2.x <= 800:
+        if p1.x >= 100 and p1.x <= 800:
+            # movement for player one
+                if keys[pygame.K_d]:
+                    p1.move_direction("right")
+                if keys[pygame.K_a]:
+                    p1.move_direction("left")
 
-        elif p1_c2:
-            if keys[pygame.K_d]:
-                mario.move_direction("right")
-            if keys[pygame.K_a]:
-                mario.move_direction("left")
+            # movement for player two
+                if keys[pygame.K_RIGHT]:
+                    p2.move_direction("right")
+                if keys[pygame.K_LEFT]:
+                    p2.move_direction("left")
 
-        # movement for player two
-        if p2_c1:
-            if keys[pygame.K_RIGHT]:
-                kirby.move_direction("right")
-            if keys[pygame.K_LEFT]:
-                kirby.move_direction("left")
-
-        elif p2_c2:
-            if keys[pygame.K_RIGHT]:
-                mario.move_direction("right")
-            if keys[pygame.K_LEFT]:
-                mario.move_direction("left")
-
-    elif kirby.x < 100:
-        kirby.x = 100
-
-    elif kirby.x > 800:
-        kirby.x = 800
-
-    elif mario.x < 100:
-        mario.x = 100
-
-    elif mario.x > 800:
-        mario.x = 800
+        # attacking and blocking
+        # player one block
+        if keys[pygame.K_q]:
+            p1.ability("block")
+        # player two block
+        if keys[pygame.K_2]:
+            p2.ability("block")
+        # player one attack
+        if keys[pygame.K_e]:
+            if p1.rect.colliderect(p2.rect) and p2.block is False:
+                p2_health -= 25
+        # player two attack
+        if keys[pygame.K_1]:
+            if p2.rect.colliderect(p1.rect) and p1.block is False:
+                p2_health -= 25
 
 
-    # character health
-    if p1_health == 100:
-        p1_bar.health_bar(100)
-    elif p1_health == 75:
-        p1_bar.health_bar(75)
-    elif p1_health == 50:
-        p1_bar.health_bar(50)
-    elif p1_health == 25:
-        p1_bar.health_bar(25)
-    elif p1_health == 0:
-        p1_bar.health_bar(0)
-
-    if p2_health == 100:
-        p2_bar.health_bar(100)
-    elif p2_health == 75:
-        p2_bar.health_bar(75)
-    elif p2_health == 50:
-        p2_bar.health_bar(50)
-    elif p2_health == 25:
-        p2_bar.health_bar(25)
-    elif p2_health == 0:
-        p2_bar.health_bar(0)
+    # character health bars
+    p1_bar.health_bar(p1_health)
+    p2_bar.health_bar(p2_health)
 
 
     # --- Main event loop
@@ -131,16 +104,16 @@ while run:
         if characters_determined is False:
             if fight_start:
                 if p1_c1:
-                    kirby = Kirby(300, 500)
+                    p1 = Kirby(300, 500)
                 if p1_c2:
-                    mario = Mario(300, 450)
+                    p1 = Mario(300, 450)
                 if p2_c1:
-                    kirby = Kirby(700, 500)
+                    p2 = Kirby(700, 500)
                 if p2_c2:
-                    mario = Mario(700, 450)
+                    p2 = Mario(700, 450)
                 characters_determined = True
 
-            if fight_start is False:
+            else:
                 if p1_chosen:
                     pos = pygame.mouse.get_pos()
                     if kirby.rect.collidepoint(pos):
@@ -151,6 +124,7 @@ while run:
                         if event.type == pygame.MOUSEBUTTONUP:
                             p2_c2 = True
                             fight_start = True
+
 
                 else:
                     pos = pygame.mouse.get_pos()
@@ -186,18 +160,16 @@ while run:
             screen.blit(bg, (0, 0))
             screen.blit(p1_bar.image, (p1_bar.x, p1_bar.y))
             screen.blit(p2_bar.image, (p2_bar.x, p2_bar.y))
-            if p1_c1:
-                # kirby = Kirby(300, 600)
-                screen.blit(kirby.image, (kirby.x, kirby.y))
-            if p1_c2:
-                # mario = Mario(300, 600)
-                screen.blit(mario.image, (mario.x, mario.y))
-            if p2_c1:
-                # kirby = Kirby(700, 600)
-                screen.blit(kirby.image, (kirby.x, kirby.y))
-            if p2_c2:
-                # mario = Mario(700, 600)
-                screen.blit(mario.image, (mario.x, mario.y))
+            screen.blit(p1.image, (p1.x, p1.y))
+            # screen.blit(p2.image, (p2.x, p2.y))
+            # if p1_c1:
+            #     screen.blit(kirby.image, (kirby.x, kirby.y))
+            # if p1_c2:
+            #     screen.blit(mario.image, (mario.x, mario.y))
+            # if p2_c1:
+            #     screen.blit(kirby.image, (kirby.x, kirby.y))
+            # if p2_c2:
+            #     screen.blit(mario.image, (mario.x, mario.y))
     pygame.display.update()
 
 # Once we have exited the main program loop we can stop the game engine:
