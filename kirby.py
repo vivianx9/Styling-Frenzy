@@ -14,6 +14,7 @@ class Kirby:
             self.x = 100
         if self.x > 800:
             self.x = 800
+        self.block = False
 
     def move_direction(self, direction):
         if direction == "right":

@@ -33,6 +33,8 @@ fight_start = False
 p1_chosen = False
 characters_determined = False
 
+attack = False
+
 p1_c1 = False
 p1_c2 = False
 p2_c1 = False
@@ -77,17 +79,25 @@ while run:
         # player two block
         if keys[pygame.K_2]:
             p2.ability("block")
-        # player one attack
-        if keys[pygame.K_e]:
-            if p1.rect.colliderect(p2.rect) and p2.block is False:
-                p2_health -= 25
-        # player two attack
-        if keys[pygame.K_1]:
-            if p2.rect.colliderect(p1.rect) and p1.block is False:
-                p2_health -= 25
+
+        if attack is False:
+            # player one attack
+            if keys[pygame.K_e]:
+                if p1.rect.colliderect(p2.rect) and p2.block is False:
+                    p2_health -= 25
+                    attack = True
+            # player two attack
+            if keys[pygame.K_1]:
+                if p2.rect.colliderect(p1.rect) and p1.block is False:
+                    p1_health -= 25
+                    attack = True
+
+        if attack:
+            pygame.time.wait(1000)
+            attack = False
 
 
-    # character health bars
+    # character health bar
     p1_bar.health_bar(p1_health)
     p2_bar.health_bar(p2_health)
 
@@ -97,12 +107,8 @@ while run:
         if event.type == pygame.QUIT:  # If user clicked close
             run = False
 
-        if event.type == pygame.MOUSEBUTTONUP and game_start and p1_chosen:
-            fight_start = True
-
-
-        if characters_determined is False:
-            if fight_start:
+        if fight_start is False:
+            if characters_determined:
                 if p1_c1:
                     p1 = Kirby(300, 500)
                 if p1_c2:
@@ -111,7 +117,7 @@ while run:
                     p2 = Kirby(700, 500)
                 if p2_c2:
                     p2 = Mario(700, 450)
-                characters_determined = True
+                fight_start = True
 
             else:
                 if p1_chosen:
@@ -119,11 +125,11 @@ while run:
                     if kirby.rect.collidepoint(pos):
                         if event.type == pygame.MOUSEBUTTONUP:
                             p2_c1 = True
-                            fight_start = True
+                            characters_determined = True
                     if mario.rect.collidepoint(pos):
                         if event.type == pygame.MOUSEBUTTONUP:
                             p2_c2 = True
-                            fight_start = True
+                            characters_determined = True
 
 
                 else:
@@ -161,15 +167,7 @@ while run:
             screen.blit(p1_bar.image, (p1_bar.x, p1_bar.y))
             screen.blit(p2_bar.image, (p2_bar.x, p2_bar.y))
             screen.blit(p1.image, (p1.x, p1.y))
-            # screen.blit(p2.image, (p2.x, p2.y))
-            # if p1_c1:
-            #     screen.blit(kirby.image, (kirby.x, kirby.y))
-            # if p1_c2:
-            #     screen.blit(mario.image, (mario.x, mario.y))
-            # if p2_c1:
-            #     screen.blit(kirby.image, (kirby.x, kirby.y))
-            # if p2_c2:
-            #     screen.blit(mario.image, (mario.x, mario.y))
+            screen.blit(p2.image, (p2.x, p2.y))
     pygame.display.update()
 
 # Once we have exited the main program loop we can stop the game engine:
