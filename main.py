@@ -9,7 +9,7 @@ pygame.init()
 pygame.font.init()
 my_font = pygame.font.SysFont('Times New Roman', 15)
 my_font1 = pygame.font.SysFont('Times New Roman', 30)
-my_font2 = pygame.font.SysFont('Times New Roman', 20)
+my_font2 = pygame.font.SysFont('Times New Roman', 22)
 pygame.display.set_caption("Street Fighter")
 
 # set up variables for the display
@@ -17,8 +17,10 @@ size = (1024, 768)
 screen = pygame.display.set_mode(size)
 bg = pygame.image.load("images/background.png")
 bg = pygame.transform.scale(bg, (1024, 768))
+select_screen = pygame.image.load("images/select_screen.png")
+select_screen = pygame.transform.scale(select_screen, (1024, 768))
 
-welcome_message = "Welcome to Street Fighter"
+welcome_message = "Welcome to Smash Bros"
 instructions_message = "Player One: Use AD to move. E is attack and Q is block."
 instructions_message2 = "Player Two: Use LEFT and RIGHT arrows to move. UP arrow to attack and DOWN arrow to block."
 character_instructions1 = "Choose a character for player 1"
@@ -27,8 +29,8 @@ character_instructions2 = "Choose a character for player 2"
 winning_message = "Game over! The winner is"
 winner = "player"
 
-kirby = Kirby(200, 600)
-mario = Mario(300, 600)
+kirby = Kirby(110, 176)
+mario = Mario(323, 178)
 p1_bar = PlayerOne(45, 650)
 p2_bar = PlayerTwo(700, 650)
 
@@ -132,17 +134,19 @@ while run:
         if event.type == pygame.QUIT:  # If user clicked close
             run = False
 
+        if event.type == pygame.MOUSEBUTTONUP and fight_start is False and characters_determined:
+            fight_start = True
+
         if fight_start is False:
             if characters_determined:
                 if p1_c1:
-                    p1 = Kirby(300, 500)
+                    p1 = Kirby(200, 500)
                 if p1_c2:
-                    p1 = Mario(300, 450)
+                    p1 = Mario(200, 450)
                 if p2_c1:
                     p2 = Kirby(700, 500)
                 if p2_c2:
                     p2 = Mario(700, 450)
-                fight_start = True
 
             else:
                 if p1_chosen:
@@ -178,17 +182,30 @@ while run:
     if game_end is False:
         if game_start is False:
             screen.blit(display_welcome_message, (350, 300))
-            screen.blit(display_instructions_message, (200, 350))
-            screen.blit(display_instructions2_message, (50, 400))
+            screen.blit(display_instructions_message, (250, 350))
+            screen.blit(display_instructions2_message, (100, 400))
         else:
             if fight_start is False:
-                screen.fill((100, 100, 100))
-                screen.blit(kirby.image, (200, 600))
-                screen.blit(mario.image, (350, 600))
+                screen.blit(select_screen, (0, 0))
+                screen.blit(kirby.image, (110, 176))
+                screen.blit(mario.image, (323, 178))
                 if p1_chosen is False:
                     screen.blit(display_character_instructions1, (300, 200))
                 else:
                     screen.blit(display_character_instructions2, (300, 200))
+
+                if p1_chosen:
+                    if p1_c1:
+                        screen.blit(kirby.image, (100, 600))
+                    if p1_c2:
+                        screen.blit(mario.image, (100, 550))
+
+                if characters_determined:
+                    if p2_c1:
+                        screen.blit(kirby.image, (580, 600))
+                    if p2_c2:
+                        screen.blit(mario.image, (580, 550))
+
             else:
                 screen.blit(bg, (0, 0))
                 screen.blit(p1_bar.image, (p1_bar.x, p1_bar.y))
