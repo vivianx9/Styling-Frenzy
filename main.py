@@ -1,3 +1,5 @@
+import time
+
 import pygame
 from kirby import Kirby
 from mario import Mario
@@ -19,6 +21,8 @@ bg = pygame.image.load("images/background.png")
 bg = pygame.transform.scale(bg, (1024, 768))
 select_screen = pygame.image.load("images/select_screen.png")
 select_screen = pygame.transform.scale(select_screen, (1024, 768))
+end_screen = pygame.image.load("images/end_screen.png")
+end_screen = pygame.transform.scale(end_screen, (1024, 768))
 
 welcome_message = "Welcome to Smash Bros"
 instructions_message = "Player One: Use AD to move. E is attack and Q is block."
@@ -41,7 +45,8 @@ p1_chosen = False
 characters_determined = False
 game_end = False
 
-attack = False
+attack1 = False
+attack2 = False
 p1_block = False
 p2_block = False
 
@@ -99,28 +104,41 @@ while run:
         else:
             p2_block = False
 
-        if attack is False:
-            # player one attack
+        # player one attack
+        if attack1 is False:
             if keys[pygame.K_e]:
                 if p1.rect.colliderect(p2.rect) and p2_block is False:
                     p2_health -= 25
-                    attack = True
-            # player two attack
+                    attack1 = True
+                    start_time1 = time.time()
+
+        if attack1:
+            current_time1 = time.time()
+            cooldown1 = current_time1- start_time1
+            if int(cooldown1) == 2:
+                attack1 = False
+
+        # player two attack
+        if attack2 is False:
             if keys[pygame.K_UP]:
                 if p2.rect.colliderect(p1.rect) and p1_block is False:
                     p1_health -= 25
-                    attack = True
+                    attack2 = True
+                    start_time2 = time.time()
 
-        if attack:
-            pygame.time.wait(1000)
-            attack = False
+        if attack2:
+            current_time2 = time.time()
+            cooldown2 = current_time2 - start_time2
+            if int(cooldown2) == 2:
+                attack2 = False
+
 
         if p1_health == 0 or p2_health == 0:
             game_end = True
             if p1_health == 0:
-                winner = "Player Two"
+                winner = "Player Two Wins"
             if p2_health == 0:
-                winner = "Player One"
+                winner = "Player One Wins"
             display_winner = my_font1.render(winner, True, (255, 255, 255))
 
 
@@ -190,9 +208,9 @@ while run:
                 screen.blit(kirby.image, (110, 176))
                 screen.blit(mario.image, (323, 178))
                 if p1_chosen is False:
-                    screen.blit(display_character_instructions1, (300, 200))
+                    screen.blit(display_character_instructions1, (300, 50))
                 else:
-                    screen.blit(display_character_instructions2, (300, 200))
+                    screen.blit(display_character_instructions2, (300, 50))
 
                 if p1_chosen:
                     if p1_c1:
@@ -213,9 +231,8 @@ while run:
                 screen.blit(p1.image, (p1.x, p1.y))
                 screen.blit(p2.image, (p2.x, p2.y))
     else:
-        screen.fill((100, 100, 100))
-        screen.blit(display_winning_message, (300, 200))
-        screen.blit(display_winner, (400, 300))
+        screen.blit(end_screen, (0, 0))
+        screen.blit(display_winner, (400, 600))
 
     pygame.display.update()
 
