@@ -3,6 +3,8 @@ import time
 import pygame
 from kirby import Kirby
 from mario import Mario
+from bowserjr import BowserJr
+from steve import Steve
 from player_one import PlayerOne
 from player_two import PlayerTwo
 
@@ -35,6 +37,8 @@ winner = "player"
 
 kirby = Kirby(110, 176)
 mario = Mario(323, 178)
+bowserjr = BowserJr(500, 160)
+steve = Steve(700, 180)
 p1_bar = PlayerOne(45, 650)
 p2_bar = PlayerTwo(700, 650)
 
@@ -52,8 +56,12 @@ p2_block = False
 
 p1_c1 = False
 p1_c2 = False
+p1_c3 = False
+p1_c4 = False
 p2_c1 = False
 p2_c2 = False
+p2_c3 = False
+p2_c4 = False
 
 p1_health = 100
 p2_health = 100
@@ -114,7 +122,7 @@ while run:
 
         if attack1:
             current_time1 = time.time()
-            cooldown1 = current_time1- start_time1
+            cooldown1 = current_time1 - start_time1
             if int(cooldown1) == 2:
                 attack1 = False
 
@@ -161,10 +169,21 @@ while run:
                     p1 = Kirby(200, 500)
                 if p1_c2:
                     p1 = Mario(200, 450)
+                    p1.image = pygame.transform.flip(p1.image, True, False)
+                if p1_c3:
+                    p1 = BowserJr(150, 425)
+                if p1_c4:
+                    p1 = Steve(200, 450)
+                    p1.image = pygame.transform.flip(p1.image, True, False)
+
                 if p2_c1:
                     p2 = Kirby(700, 500)
                 if p2_c2:
                     p2 = Mario(700, 450)
+                if p2_c3:
+                    p2 = BowserJr(700, 425)
+                if p2_c4:
+                    p2 = Steve(700, 450)
 
             else:
                 if p1_chosen:
@@ -177,6 +196,14 @@ while run:
                         if event.type == pygame.MOUSEBUTTONUP:
                             p2_c2 = True
                             characters_determined = True
+                    if bowserjr.rect.collidepoint(pos):
+                        if event.type == pygame.MOUSEBUTTONUP:
+                            p2_c3 = True
+                            characters_determined = True
+                    if steve.rect.collidepoint(pos):
+                        if event.type == pygame.MOUSEBUTTONUP:
+                            p2_c4 = True
+                            characters_determined = True
 
 
                 else:
@@ -188,6 +215,14 @@ while run:
                     if mario.rect.collidepoint(pos):
                         if event.type == pygame.MOUSEBUTTONUP:
                             p1_c2 = True
+                            p1_chosen = True
+                    if bowserjr.rect.collidepoint(pos):
+                        if event.type == pygame.MOUSEBUTTONUP:
+                            p1_c3 = True
+                            p1_chosen = True
+                    if steve.rect.collidepoint(pos):
+                        if event.type == pygame.MOUSEBUTTONUP:
+                            p1_c4 = True
                             p1_chosen = True
 
 
@@ -205,8 +240,10 @@ while run:
         else:
             if fight_start is False:
                 screen.blit(select_screen, (0, 0))
-                screen.blit(kirby.image, (110, 176))
-                screen.blit(mario.image, (323, 178))
+                screen.blit(kirby.image, (kirby.x, kirby.y))
+                screen.blit(mario.image, (mario.x, mario.y))
+                screen.blit(bowserjr.image, (bowserjr.x, bowserjr.y))
+                screen.blit(steve.image, (steve.x, steve.y))
                 if p1_chosen is False:
                     screen.blit(display_character_instructions1, (300, 50))
                 else:
@@ -217,12 +254,20 @@ while run:
                         screen.blit(kirby.image, (100, 600))
                     if p1_c2:
                         screen.blit(mario.image, (100, 550))
+                    if p1_c3:
+                        screen.blit(bowserjr.image, (50, 550))
+                    if p1_c4:
+                        screen.blit(steve.image, (80, 550))
 
                 if characters_determined:
                     if p2_c1:
                         screen.blit(kirby.image, (580, 600))
                     if p2_c2:
                         screen.blit(mario.image, (580, 550))
+                    if p2_c3:
+                        screen.blit(bowserjr.image, (500, 550))
+                    if p2_c4:
+                        screen.blit(steve.image, (520, 550))
 
             else:
                 screen.blit(bg, (0, 0))
